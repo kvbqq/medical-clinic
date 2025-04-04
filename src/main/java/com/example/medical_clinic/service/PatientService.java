@@ -13,7 +13,7 @@ public class PatientService {
     private final PatientRepository patientRepository;
 
     public List<Patient> getAllPatients() {
-        return patientRepository.getPatients();
+        return patientRepository.findAll();
     }
 
     public Patient getPatient(String email) {
@@ -25,20 +25,14 @@ public class PatientService {
         return patientRepository.addPatient(patient);
     }
 
-    public Patient removePatient(String email) {
-        return patientRepository.removePatient(getPatient(email));
+    public void removePatient(String email) {
+        if (!patientRepository.removePatient(email))
+            throw new IllegalArgumentException("Patient with given email does not exist");
     }
 
     public Patient updatePatient(String email, Patient updatedPatient) {
         Patient existingPatient = getPatient(email);
-
-        existingPatient.setEmail(updatedPatient.getEmail());
-        existingPatient.setPassword(updatedPatient.getPassword());
-        existingPatient.setIdCardNo(updatedPatient.getIdCardNo());
-        existingPatient.setFirstName(updatedPatient.getFirstName());
-        existingPatient.setLastName(updatedPatient.getLastName());
-        existingPatient.setPhoneNumber(updatedPatient.getPhoneNumber());
-        existingPatient.setBirthday(updatedPatient.getBirthday());
+        existingPatient.update(updatedPatient);
 
         return existingPatient;
     }
