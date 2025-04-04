@@ -10,12 +10,12 @@ import java.util.List;
 public final class PatientValidator {
     public static void validateImmutableIdCardNo(Patient existingPatient, Patient updatedPatient) {
         if (!existingPatient.getIdCardNo().equals(updatedPatient.getIdCardNo()))
-            throw new IllegalArgumentException("Patient's Card Id Number could not be changed");
+            throw new IllegalArgumentException("Patient's Card Id Number cannot be changed");
     }
 
     public static void validateNoNullFields(Patient patient) {
         if (patient.anyNull())
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException("Patient cannot have null values");
     }
 
     public static void validateUniqueEmail(List<Patient> patients, String email) {
