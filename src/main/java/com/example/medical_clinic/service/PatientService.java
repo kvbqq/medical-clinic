@@ -2,6 +2,7 @@ package com.example.medical_clinic.service;
 
 import com.example.medical_clinic.model.Patient;
 import com.example.medical_clinic.repository.PatientRepository;
+import com.example.medical_clinic.validation.PatientValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,10 @@ public class PatientService {
     }
 
     public Patient updatePatient(String email, Patient updatedPatient) {
+        PatientValidator.validateNoNullFields(updatedPatient);
+        PatientValidator.validateUniqueEmail(getAllPatients(), updatedPatient.getEmail());
         Patient existingPatient = getPatient(email);
+        PatientValidator.validateImmutableIdCardNo(existingPatient, updatedPatient);
         existingPatient.update(updatedPatient);
 
         return existingPatient;

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 @Data
 @AllArgsConstructor
@@ -24,5 +25,16 @@ public class Patient {
         this.lastName = patient.getLastName();
         this.phoneNumber = patient.getPhoneNumber();
         this.birthday = patient.getBirthday();
+    }
+
+    public boolean anyNull() {
+        return Arrays.stream(this.getClass().getDeclaredFields())
+                .anyMatch(field -> {
+                    try {
+                        return field.get(this) == null;
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 }
