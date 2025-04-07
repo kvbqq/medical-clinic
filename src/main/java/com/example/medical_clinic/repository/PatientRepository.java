@@ -1,7 +1,6 @@
 package com.example.medical_clinic.repository;
 
 import com.example.medical_clinic.model.Patient;
-import com.example.medical_clinic.validation.PatientValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -25,8 +24,6 @@ public class PatientRepository {
     }
 
     public Patient addPatient(Patient patient) {
-        PatientValidator.validateUniqueEmail(new ArrayList<>(patients), patient.getEmail());
-        PatientValidator.validateNoNullFields(patient);
         patients.add(patient);
         return patient;
     }

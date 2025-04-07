@@ -1,6 +1,7 @@
 package com.example.medical_clinic.validation;
 
 import com.example.medical_clinic.model.Patient;
+import com.example.medical_clinic.repository.PatientRepository;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -18,10 +19,30 @@ public final class PatientValidator {
             throw new IllegalArgumentException("Patient cannot have null values");
     }
 
-    public static void validateUniqueEmail(List<Patient> patients, String email) {
+    public static void validateUniqueEmail(PatientRepository patientRepository, Patient patient, String email) {
+        List<Patient> patients = patientRepository.findAll();
+        patients.remove(patient);
         if (!patients.isEmpty() && patients.stream()
                 .map(Patient::getEmail)
                 .anyMatch(existingEmail -> existingEmail.equals(email)))
             throw new IllegalArgumentException("Patient with given email already exists");
+    }
+
+    public static void validatePatientUpdateData(
+            PatientRepository patientRepository,
+            Patient existingPatient,
+            Patient updatedPatient,
+            String email) {
+        validateNoNullFields(updatedPatient);
+        validateUniqueEmail(patientRepository, existingPatient, email);
+        validateImmutableIdCardNo(existingPatient, updatedPatient);
+    }
+
+    public static void validatePatientCreationData(
+            PatientRepository patientRepository,
+            Patient patient,
+            String email) {
+        validateNoNullFields(patient);
+        validateUniqueEmail(patientRepository, patient, email);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.medical_clinic.controller;
 
+import com.example.medical_clinic.model.ChangePassword;
 import com.example.medical_clinic.model.Patient;
 import com.example.medical_clinic.service.PatientService;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +37,10 @@ public class PatientController {
     @PutMapping("/{email}")
     public Patient updatePatient(@PathVariable String email, @RequestBody Patient patient) {
         return patientService.updatePatient(email, patient);
+    }
+
+    @PutMapping("/{email}/changePassword")
+    public Patient changePatientPassword(@PathVariable String email, @RequestBody ChangePassword changePassword) {
+        return patientService.changePatientPassword(email, changePassword);
     }
 }

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 
 @Data
 @AllArgsConstructor
@@ -28,13 +27,9 @@ public class Patient {
     }
 
     public boolean anyNull() {
-        return Arrays.stream(this.getClass().getDeclaredFields())
-                .anyMatch(field -> {
-                    try {
-                        return field.get(this) == null;
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+        return this.email == null || this.password == null
+                || this.idCardNo == null || this.firstName == null
+                || this.lastName == null || this.phoneNumber == null
+                || this. birthday == null;
     }
 }
