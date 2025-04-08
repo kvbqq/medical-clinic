@@ -39,7 +39,7 @@ public class PatientController {
         return patientService.updatePatient(email, patient);
     }
 
-    @PutMapping("/{email}/changePassword")
+    @PatchMapping("/{email}/password")
     public Patient changePatientPassword(@PathVariable String email, @RequestBody ChangePassword changePassword) {
         return patientService.changePatientPassword(email, changePassword);
     }
