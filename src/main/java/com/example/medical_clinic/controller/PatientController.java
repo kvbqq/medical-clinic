@@ -1,12 +1,15 @@
 package com.example.medical_clinic.controller;
 
+import com.example.medical_clinic.mapper.PatientMapper;
 import com.example.medical_clinic.model.ChangePassword;
-import com.example.medical_clinic.model.Patient;
+import com.example.medical_clinic.model.CreatePatientCommand;
+import com.example.medical_clinic.model.PatientDto;
 import com.example.medical_clinic.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,18 +18,20 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping
-    public List<Patient> getAllPatients() {
-        return patientService.getAllPatients();
+    public List<PatientDto> getAllPatients() {
+        return patientService.getAllPatients().stream()
+                .map(PatientMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{email}")
-    public Patient getPatient(@PathVariable String email) {
-        return patientService.getPatient(email);
+    public PatientDto getPatient(@PathVariable String email) {
+        return PatientMapper.toDto(patientService.getPatient(email));
     }
 
     @PostMapping
-    public Patient createPatient(@RequestBody Patient patient) {
-        return patientService.createPatient(patient);
+    public PatientDto createPatient(@RequestBody CreatePatientCommand command) {
+        return PatientMapper.toDto(patientService.createPatient(PatientMapper.toPatientEntity(command)));
     }
 
     @DeleteMapping("/{email}")
@@ -35,12 +40,12 @@ public class PatientController {
     }
 
     @PutMapping("/{email}")
-    public Patient updatePatient(@PathVariable String email, @RequestBody Patient patient) {
-        return patientService.updatePatient(email, patient);
+    public PatientDto updatePatient(@PathVariable String email, @RequestBody CreatePatientCommand command) {
+        return PatientMapper.toDto(patientService.updatePatient(email, PatientMapper.toPatientEntity(command)));
     }
 
     @PatchMapping("/{email}/password")
-    public Patient changePatientPassword(@PathVariable String email, @RequestBody ChangePassword changePassword) {
-        return patientService.changePatientPassword(email, changePassword);
+    public PatientDto changePatientPassword(@PathVariable String email, @RequestBody ChangePassword changePassword) {
+        return PatientMapper.toDto(patientService.changePatientPassword(email, changePassword));
     }
 }
