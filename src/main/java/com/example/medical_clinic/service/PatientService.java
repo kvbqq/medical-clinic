@@ -47,7 +47,7 @@ public class PatientService {
     public Patient changePatientPassword(String email, ChangePassword changePassword) {
         Patient patient = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new PatientNotFoundException("Patient with given email does not exist"));
-        patient.setPassword(changePassword.getNewPassword());
+        patient.getUser().setPassword(changePassword.getNewPassword());
 
         return patient;
     }

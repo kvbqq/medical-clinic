@@ -1,6 +1,6 @@
 package com.example.medical_clinic.controller;
 
-import com.example.medical_clinic.mapper.PatientMapper;
+import com.example.medical_clinic.mapper.PatientMapStructMapper;
 import com.example.medical_clinic.model.ChangePassword;
 import com.example.medical_clinic.model.CreatePatientCommand;
 import com.example.medical_clinic.model.PatientDto;
@@ -16,22 +16,23 @@ import java.util.stream.Collectors;
 @RequestMapping("/patients")
 public class PatientController {
     private final PatientService patientService;
+    private final PatientMapStructMapper patientMapper;
 
     @GetMapping
     public List<PatientDto> getAllPatients() {
         return patientService.getAllPatients().stream()
-                .map(PatientMapper::toDto)
+                .map(patientMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{email}")
     public PatientDto getPatient(@PathVariable String email) {
-        return PatientMapper.toDto(patientService.getPatient(email));
+        return patientMapper.toDto(patientService.getPatient(email));
     }
 
     @PostMapping
     public PatientDto createPatient(@RequestBody CreatePatientCommand command) {
-        return PatientMapper.toDto(patientService.createPatient(PatientMapper.toPatientEntity(command)));
+        return patientMapper.toDto(patientService.createPatient(patientMapper.toPatientEntity(command)));
     }
 
     @DeleteMapping("/{email}")
@@ -41,11 +42,11 @@ public class PatientController {
 
     @PutMapping("/{email}")
     public PatientDto updatePatient(@PathVariable String email, @RequestBody CreatePatientCommand command) {
-        return PatientMapper.toDto(patientService.updatePatient(email, PatientMapper.toPatientEntity(command)));
+        return patientMapper.toDto(patientService.updatePatient(email, patientMapper.toPatientEntity(command)));
     }
 
     @PatchMapping("/{email}/password")
     public PatientDto changePatientPassword(@PathVariable String email, @RequestBody ChangePassword changePassword) {
-        return PatientMapper.toDto(patientService.changePatientPassword(email, changePassword));
+        return patientMapper.toDto(patientService.changePatientPassword(email, changePassword));
     }
 }

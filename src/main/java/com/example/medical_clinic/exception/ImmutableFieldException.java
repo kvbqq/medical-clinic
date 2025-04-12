@@ -1,7 +1,9 @@
 package com.example.medical_clinic.exception;
 
-public class ImmutableFieldException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class ImmutableFieldException extends MedicalClinicException {
     public ImmutableFieldException(String message) {
-        super(message);
+        super(message, HttpStatus.BAD_REQUEST);
     }
 }

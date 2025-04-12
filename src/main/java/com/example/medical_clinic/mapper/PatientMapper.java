@@ -18,12 +18,12 @@ public class PatientMapper {
     public static Patient toPatientEntity(CreatePatientCommand command) {
         return new Patient(
                 command.getEmail(),
-                command.getPassword(),
                 command.getIdCardNo(),
                 command.getFirstName(),
                 command.getLastName(),
                 command.getPhoneNumber(),
-                command.getBirthday()
+                command.getBirthday(),
+                command.getUser()
         );
     }
 }
