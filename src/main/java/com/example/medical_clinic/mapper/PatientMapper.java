@@ -11,7 +11,8 @@ public class PatientMapper {
                 patient.getFirstName(),
                 patient.getLastName(),
                 patient.getPhoneNumber(),
-                patient.getBirthday()
+                patient.getBirthday(),
+                patient.getUser().getUsername()
         );
     }
 

@@ -24,7 +24,7 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        UserValidator.validateUniqueUsername(userRepository, user);
+        UserValidator.validateUserCreation(userRepository, user);
         return userRepository.addUser(user);
     }
 
@@ -37,7 +37,7 @@ public class UserService {
     public User updateUser(String username, User updatedUser) {
         User existingUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User with given usernem does not exist"));
-        UserValidator.validateUniqueUsername(userRepository, updatedUser);
+        UserValidator.validateUserUpdate(userRepository, updatedUser, username);
         return userRepository.updateUser(existingUser, updatedUser);
     }
 }

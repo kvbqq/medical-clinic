@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PatientService {
     private final PatientRepository patientRepository;
+    private final UserService userService;
 
     public List<Patient> getAllPatients() {
         return patientRepository.findAll();
@@ -26,6 +27,7 @@ public class PatientService {
 
     public Patient createPatient(Patient patient) {
         PatientValidator.validatePatientCreationData(patientRepository, patient, patient.getEmail());
+        userService.createUser(patient.getUser());
         return patientRepository.addPatient(patient);
     }
 

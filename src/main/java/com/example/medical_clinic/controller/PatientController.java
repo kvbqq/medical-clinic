@@ -5,6 +5,7 @@ import com.example.medical_clinic.model.ChangePassword;
 import com.example.medical_clinic.model.CreatePatientCommand;
 import com.example.medical_clinic.model.PatientDto;
 import com.example.medical_clinic.service.PatientService;
+import com.example.medical_clinic.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
