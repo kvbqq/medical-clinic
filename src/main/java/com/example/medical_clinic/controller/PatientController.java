@@ -1,10 +1,9 @@
 package com.example.medical_clinic.controller;
 
 import com.example.medical_clinic.mapper.PatientMapStructMapper;
-import com.example.medical_clinic.model.ChangePassword;
 import com.example.medical_clinic.model.CreatePatientCommand;
 import com.example.medical_clinic.model.PatientDto;
-import com.example.medical_clinic.service.PatientService;
+import com.example.medical_clinic.service.PatientJpaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 @Tag(name = "Patient", description = "Patients operations")
 @RequestMapping("/patients")
 public class PatientController {
-    private final PatientService patientService;
+    private final PatientJpaService patientService;
     private final PatientMapStructMapper patientMapper;
 
     @Operation(summary = "Get all Patients")
@@ -72,15 +71,5 @@ public class PatientController {
     @PutMapping("/{email}")
     public PatientDto updatePatient(@PathVariable String email, @RequestBody CreatePatientCommand command) {
         return patientMapper.toDto(patientService.updatePatient(email, patientMapper.toPatientEntity(command)));
-    }
-
-    @Operation(summary = "Change Patient's password")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Password changed successfully"),
-            @ApiResponse(responseCode = "404", description = "Patient with given email does not exist")
-    })
-    @PatchMapping("/{email}/password")
-    public PatientDto changePatientPassword(@PathVariable String email, @RequestBody ChangePassword changePassword) {
-        return patientMapper.toDto(patientService.changePatientPassword(email, changePassword));
     }
 }
