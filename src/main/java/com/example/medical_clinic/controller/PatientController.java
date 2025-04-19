@@ -1,10 +1,13 @@
 package com.example.medical_clinic.controller;
 
 import com.example.medical_clinic.mapper.PatientMapStructMapper;
+import com.example.medical_clinic.model.ApiError;
 import com.example.medical_clinic.model.CreatePatientCommand;
 import com.example.medical_clinic.model.PatientDto;
 import com.example.medical_clinic.service.PatientJpaService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,7 +27,7 @@ public class PatientController {
 
     @Operation(summary = "Get all Patients")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Patients found")
+            @ApiResponse(responseCode = "200", description = "Patients found", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = PatientDto.class))})
     })
     @GetMapping
     public List<PatientDto> getAllPatients() {
@@ -35,8 +38,8 @@ public class PatientController {
 
     @Operation(summary = "Get Patient by email")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Patient found"),
-            @ApiResponse(responseCode = "404", description = "Patient with given email does not exist")
+            @ApiResponse(responseCode = "200", description = "Patient found", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = PatientDto.class))}),
+            @ApiResponse(responseCode = "404", description = "Patient with given email does not exist", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))})
     })
     @GetMapping("/{email}")
     public PatientDto getPatient(@PathVariable String email) {
@@ -45,8 +48,8 @@ public class PatientController {
 
     @Operation(summary = "Create new Patient")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Patient created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid Patient data")
+            @ApiResponse(responseCode = "200", description = "Patient created successfully", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = PatientDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid Patient data", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))})
     })
     @PostMapping
     public PatientDto createPatient(@RequestBody CreatePatientCommand command) {
@@ -55,8 +58,8 @@ public class PatientController {
 
     @Operation(summary = "Delete Patient by email")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Patient deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Patient with given email does not exist")
+            @ApiResponse(responseCode = "200", description = "Patient deleted successfully", content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "404", description = "Patient with given email does not exist", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))})
     })
     @DeleteMapping("/{email}")
     public void removePatient(@PathVariable String email) {
@@ -65,8 +68,8 @@ public class PatientController {
 
     @Operation(summary = "Update Patient data")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Patient updated successfully"),
-            @ApiResponse(responseCode = "404", description = "Patient with given email does not exist")
+            @ApiResponse(responseCode = "200", description = "Patient updated successfully", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = PatientDto.class))}),
+            @ApiResponse(responseCode = "404", description = "Patient with given email does not exist", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))})
     })
     @PutMapping("/{email}")
     public PatientDto updatePatient(@PathVariable String email, @RequestBody CreatePatientCommand command) {

@@ -22,7 +22,8 @@ public class Patient {
     private String phoneNumber;
     @Temporal(TemporalType.DATE)
     private LocalDate birthday;
-    @Transient
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     public Patient(String email, String idCardNo, String firstName, String lastName, String phoneNumber, LocalDate birthday, User user) {
