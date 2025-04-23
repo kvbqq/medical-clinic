@@ -17,7 +17,7 @@ public class Doctor {
     private String firstName;
     private String lastName;
     private String specialization;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     @ManyToMany

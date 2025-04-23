@@ -10,5 +10,5 @@ public class CreateDoctorCommand {
     private String firstName;
     private String lastName;
     private String specialization;
-    private User user;
+    private UserDto user;
 }
