@@ -12,10 +12,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
+//import java.util.List;
+//import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,15 +25,23 @@ public class PatientController {
     private final PatientJpaService patientService;
     private final PatientMapStructMapper patientMapper;
 
-    @Operation(summary = "Get all Patients")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Patients found", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = PatientDto.class))})
-    })
+//    @Operation(summary = "Get all Patients")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Patients found", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = PatientDto.class))})
+//    })
+//    @GetMapping
+//    public List<PatientDto> getAllPatients() {
+//        return patientService.getAllPatients().stream()
+//                .map(patientMapper::toDto)
+//                .collect(Collectors.toList());
+//    }
+
     @GetMapping
-    public List<PatientDto> getAllPatients() {
-        return patientService.getAllPatients().stream()
-                .map(patientMapper::toDto)
-                .collect(Collectors.toList());
+    public Page<PatientDto> getPatients(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        return patientService.getPatients(page, size)
+                .map(patientMapper::toDto);
     }
 
     @Operation(summary = "Get Patient by email")

@@ -1,6 +1,9 @@
 package com.example.medical_clinic.repository;
 
 import com.example.medical_clinic.model.Institution;
+import lombok.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +12,7 @@ import java.util.Optional;
 @Repository
 public interface InstitutionRepository extends JpaRepository<Institution, Long> {
     Optional<Institution> findByName(String name);
+
+    @NonNull
+    Page<Institution> findAll(@NonNull Pageable pageable);
 }

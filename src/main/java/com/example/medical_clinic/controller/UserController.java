@@ -13,11 +13,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
+//import java.util.List;
+//import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,15 +27,21 @@ public class UserController {
     private final UserJpaService userService;
     private final UserMapper userMapper;
 
-    @Operation(summary = "Get all users")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Users found", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class))})
-    })
+//    @Operation(summary = "Get all users")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "Users found", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class))})
+//    })
+//    @GetMapping
+//    public List<UserDto> getAllUsers() {
+//        return userService.getAllUsers().stream()
+//                .map(userMapper::toDto)
+//                .collect(Collectors.toList());
+//    }
+
     @GetMapping
-    public List<UserDto> getAllUsers() {
-        return userService.getAllUsers().stream()
-                .map(userMapper::toDto)
-                .collect(Collectors.toList());
+    public Page<UserDto> getUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+        return userService.getUsers(page, size)
+                .map(userMapper::toDto);
     }
 
     @Operation(summary = "Get User by username")

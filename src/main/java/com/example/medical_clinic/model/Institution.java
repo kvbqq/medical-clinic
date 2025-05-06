@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.util.List;
 
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -29,5 +30,18 @@ public class Institution {
         this.street = institution.getStreet();
         this.buildingNumber = institution.getBuildingNumber();
         this.doctors = institution.getDoctors();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Institution institution = (Institution) o;
+        return id != null && id.equals(institution.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

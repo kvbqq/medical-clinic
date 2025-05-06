@@ -4,18 +4,25 @@ import com.example.medical_clinic.exception.PatientNotFoundException;
 import com.example.medical_clinic.repository.PatientJpaRepository;
 import com.example.medical_clinic.validation.PatientJpaValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.example.medical_clinic.model.Patient;
-
-import java.util.List;
+//import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PatientJpaService {
     private final PatientJpaRepository patientRepository;
 
-    public List<Patient> getAllPatients() {
-        return patientRepository.findAll();
+//    public List<Patient> getAllPatients() {
+//        return patientRepository.findAll();
+//    }
+
+    public Page<Patient> getPatients(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return patientRepository.findAll(pageable);
     }
 
     public Patient getPatient(String email) {
