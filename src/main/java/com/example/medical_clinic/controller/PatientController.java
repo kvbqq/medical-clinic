@@ -12,10 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-//import java.util.List;
-//import java.util.stream.Collectors;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,11 +36,10 @@ public class PatientController {
 //    }
 
     @GetMapping
-    public Page<PatientDto> getPatients(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
-        return patientService.getPatients(page, size)
-                .map(patientMapper::toDto);
+    public List<PatientDto> getPatients(Pageable pageable) {
+        return patientService.getPatients(pageable).stream()
+                .map(patientMapper::toDto)
+                .toList();
     }
 
     @Operation(summary = "Get Patient by email")
