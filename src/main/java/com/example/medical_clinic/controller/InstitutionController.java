@@ -5,9 +5,9 @@ import com.example.medical_clinic.model.CreateInstitutionCommand;
 import com.example.medical_clinic.model.InstitutionDto;
 import com.example.medical_clinic.service.InstitutionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-//import java.util.List;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,19 +16,11 @@ public class InstitutionController {
     private final InstitutionService institutionService;
     private final InstitutionMapper institutionMapper;
 
-//    @GetMapping
-//    public List<InstitutionDto> getInsitutions() {
-//        return institutionService.getInstitutions().stream()
-//                .map(institutionMapper::toDto)
-//                .toList();
-//    }
-
     @GetMapping
-    public Page<InstitutionDto> getInstitutions(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
-        return institutionService.getInstitutions(page, size)
-                .map(institutionMapper::toDto);
+    public List<InstitutionDto> getInstitutions(Pageable pageable) {
+        return institutionService.getInstitutions(pageable).stream()
+                .map(institutionMapper::toDto)
+                .toList();
     }
 
     @GetMapping("/{name}")

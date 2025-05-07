@@ -4,24 +4,17 @@ import com.example.medical_clinic.exception.InstitutionNotFoundException;
 import com.example.medical_clinic.model.Institution;
 import com.example.medical_clinic.repository.InstitutionRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-//import java.util.List;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class InstitutionService {
     private final InstitutionRepository institutionRepository;
 
-//    public List<Institution> getInstitutions() {
-//        return institutionRepository.findAll();
-//    }
-
-    public Page<Institution> getInstitutions(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return institutionRepository.findAll(pageable);
+    public List<Institution> getInstitutions(Pageable pageable) {
+        return institutionRepository.findAll(pageable).getContent();
     }
 
     public Institution getInstitution(String name) {

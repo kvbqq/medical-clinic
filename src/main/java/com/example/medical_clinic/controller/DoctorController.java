@@ -5,9 +5,9 @@ import com.example.medical_clinic.model.CreateDoctorCommand;
 import com.example.medical_clinic.model.DoctorDto;
 import com.example.medical_clinic.service.DoctorService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-//import java.util.List;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,19 +16,11 @@ public class DoctorController {
     private final DoctorService doctorService;
     private final DoctorMapper doctorMapper;
 
-//    @GetMapping
-//    public List<DoctorDto> getDoctors() {
-//        return doctorService.getDoctors().stream()
-//                .map(doctorMapper::toDto)
-//                .toList();
-//    }
-
     @GetMapping
-    public Page<DoctorDto> getDoctors(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
-        return doctorService.getDoctors(page, size)
-                .map(doctorMapper::toDto);
+    public List<DoctorDto> getDoctors(Pageable pageable) {
+        return doctorService.getDoctors(pageable).stream()
+                .map(doctorMapper::toDto)
+                .toList();
     }
 
     @GetMapping("/{email}")

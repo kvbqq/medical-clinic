@@ -24,17 +24,6 @@ public class PatientController {
     private final PatientJpaService patientService;
     private final PatientMapStructMapper patientMapper;
 
-//    @Operation(summary = "Get all Patients")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Patients found", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = PatientDto.class))})
-//    })
-//    @GetMapping
-//    public List<PatientDto> getAllPatients() {
-//        return patientService.getAllPatients().stream()
-//                .map(patientMapper::toDto)
-//                .collect(Collectors.toList());
-//    }
-
     @GetMapping
     public List<PatientDto> getPatients(Pageable pageable) {
         return patientService.getPatients(pageable).stream()

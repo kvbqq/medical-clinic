@@ -5,24 +5,17 @@ import com.example.medical_clinic.model.User;
 import com.example.medical_clinic.repository.UserJpaRepository;
 import com.example.medical_clinic.validation.UserJpaValidator;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-//import java.util.List;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class UserJpaService {
     private final UserJpaRepository userRepository;
 
-//    public List<User> getAllUsers() {
-//        return userRepository.findAll();
-//    }
-
-    public Page<User> getUsers(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return userRepository.findAll(pageable);
+    public List<User> getUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).getContent();
     }
 
     public User getUser(String username) {

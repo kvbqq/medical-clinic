@@ -7,11 +7,9 @@ import com.example.medical_clinic.model.Institution;
 import com.example.medical_clinic.repository.DoctorRepository;
 import com.example.medical_clinic.repository.InstitutionRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-//import java.util.List;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,13 +17,8 @@ public class DoctorService {
     private final DoctorRepository doctorRepository;
     private final InstitutionRepository institutionRepository;
 
-//    public List<Doctor> getDoctors() {
-//        return doctorRepository.findAll();
-//    }
-
-    public Page<Doctor> getDoctors(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return doctorRepository.findAll(pageable);
+    public List<Doctor> getDoctors(Pageable pageable) {
+        return doctorRepository.findAll(pageable).getContent();
     }
 
     public Doctor getDoctorByEmail(String email) {

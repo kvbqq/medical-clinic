@@ -14,10 +14,6 @@ import java.util.List;
 public class PatientJpaService {
     private final PatientJpaRepository patientRepository;
 
-//    public List<Patient> getAllPatients() {
-//        return patientRepository.findAll();
-//    }
-
     public List<Patient> getPatients(Pageable pageable) {
         return patientRepository.findAll(pageable).getContent();
     }
