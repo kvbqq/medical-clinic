@@ -80,10 +80,11 @@ public class DoctorServiceTest {
         when(doctorRepository.save(any(Doctor.class))).thenReturn(doctor);
 
         // when
-
+        Doctor result = doctorService.createDoctor(doctor);
 
         // then
-
+        Mockito.verify(doctorRepository).save(doctor);
+        assertEquals(doctor, result);
     }
 
     @Test
