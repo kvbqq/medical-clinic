@@ -6,9 +6,10 @@ import lombok.Data;
 
 import java.util.List;
 
-@Entity
 @Data
 @AllArgsConstructor
+@Entity
+@Table(name = "DOCTORS")
 public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -16,8 +16,6 @@ public class User {
     private Long id;
     private String username;
     private String password;
-    @OneToOne(mappedBy = "user")
-    private Patient patient;
 
     public void update(User updatedUser) {
         this.username = updatedUser.getUsername();
