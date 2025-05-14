@@ -63,19 +63,27 @@ public class UserServiceTest {
     @Test
     void createUser_userCanBeCreated_userCreated() {
         // given
+        User user = new User(1L, "user1", "pass1");
 
+        when(userRepository.save(user)).thenReturn(user);
 
         // when
-
+        User result = userService.createUser(user);
 
         // then
-
+        Mockito.verify(userRepository).save(user);
+        assertAll(
+                () -> assertEquals(1L, result.getId()),
+                () -> assertEquals("user1", result.getUsername()),
+                () -> assertEquals("pass1", result.getPassword())
+        );
     }
 
     @Test
     void removeUser_userExists_userRemoved() {
         // given
         User user = new User(1L, "user1", "pass1");
+
         when(userRepository.findByUsername("user1")).thenReturn(Optional.of(user));
 
         // when
@@ -88,12 +96,20 @@ public class UserServiceTest {
     @Test
     void updateUser_userExists_userUpdated() {
         // given
+        User existingUser = new User(1L, "user1", "pass1");
+        User user = new User(1L, "user2", "pass2");
 
+        when(userRepository.findByUsername("user1")).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(existingUser)).thenReturn(existingUser);
 
         // when
-
+        User result = userService.updateUser("user1", user);
 
         // then
-
+        Mockito.verify(userRepository).save(existingUser);
+        assertAll(
+                () -> assertEquals("user2", result.getUsername()),
+                () -> assertEquals("pass2", result.getPassword())
+        );
     }
 }

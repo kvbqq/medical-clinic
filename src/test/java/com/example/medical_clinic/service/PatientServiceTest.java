@@ -53,6 +53,7 @@ public class PatientServiceTest {
     void getPatient_patientExists_patientReturned() {
         // given
         Patient patient = new Patient(1L, "p1@test.com", "ID1", "Name1", "Last1", "123456", LocalDate.of(2000, 1, 1), new User(1L, "user1", "pass1"));
+
         when(patientRepository.findByEmail("p1@test.com")).thenReturn(Optional.of(patient));
 
         // when
@@ -65,19 +66,30 @@ public class PatientServiceTest {
     @Test
     void createPatient_patientCanBeCreated_patientCreated() {
         // given
+        Patient patient = new Patient(1L, "p1@test.com", "ID1", "Name1", "Last1", "123456", LocalDate.of(2000, 1, 1), new User(1L, "user1", "pass1"));
 
+        when(patientRepository.save(any(Patient.class))).thenReturn(patient);
 
         // when
-
+        Patient result = patientService.createPatient(patient);
 
         // then
-
+        Mockito.verify(patientRepository).save(patient);
+        assertAll(
+                () -> assertEquals(1L, result.getId()),
+                () -> assertEquals("p1@test.com", result.getEmail()),
+                () -> assertEquals("ID1", result.getIdCardNo()),
+                () -> assertEquals("Name1", result.getFirstName()),
+                () -> assertEquals("Last1", result.getLastName()),
+                () -> assertEquals("123456", result.getPhoneNumber())
+        );
     }
 
     @Test
     void removePatient_patientExists_patientRemoved() {
         // given
         Patient patient = new Patient(1L, "p1@test.com", "ID1", "Name1", "Last1", "123456", LocalDate.of(2000, 1, 1), new User(1L, "user1", "pass1"));
+
         when(patientRepository.findByEmail("p1@test.com")).thenReturn(Optional.of(patient));
 
         // when
@@ -90,12 +102,21 @@ public class PatientServiceTest {
     @Test
     void updatePatient_patientExists_patientUpdated() {
         // given
+        User user = new User(1L, "user1", "pass1");
+        Patient existingPatient = new Patient(1L, "p1@test.com", "ID1", "Name1", "Last1", "123456", LocalDate.of(2000, 1, 1), user);
+        Patient patient = new Patient(1L, "p2@test.com", "ID1", "Name2", "Last2", "098765", LocalDate.of(2002, 2, 2), user);
 
+        when(patientRepository.findByEmail("p1@test.com")).thenReturn(Optional.of(existingPatient));
+        when(patientRepository.save(existingPatient)).thenReturn(existingPatient);
 
         // when
-
+        Patient result = patientService.updatePatient("p1@test.com", patient);
 
         // then
-
+        Mockito.verify(patientRepository).save(existingPatient);
+        assertAll(
+                () -> assertEquals("p2@test.com", result.getEmail()),
+                () -> assertEquals("ID1", result.getIdCardNo())
+        );
     }
 }

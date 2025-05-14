@@ -1,6 +1,7 @@
 package com.example.medical_clinic.service;
 
 import com.example.medical_clinic.model.Doctor;
+import com.example.medical_clinic.model.Institution;
 import com.example.medical_clinic.model.User;
 import com.example.medical_clinic.repository.DoctorRepository;
 import com.example.medical_clinic.repository.InstitutionRepository;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,8 +53,11 @@ public class DoctorServiceTest {
         assertAll(
                 () -> assertEquals(3, result.size()),
                 () -> assertEquals(1L, result.get(0).getId()),
+                () -> assertEquals("1@test.com", result.get(0).getEmail()),
                 () -> assertEquals(2L, result.get(1).getId()),
-                () -> assertEquals(3L, result.get(2).getId())
+                () -> assertEquals("2@test.com", result.get(1).getEmail()),
+                () -> assertEquals(3L, result.get(2).getId()),
+                () -> assertEquals("3@test.com", result.get(2).getEmail())
         );
     }
 
@@ -84,7 +89,13 @@ public class DoctorServiceTest {
 
         // then
         Mockito.verify(doctorRepository).save(doctor);
-        assertEquals(doctor, result);
+        assertAll(
+                () -> assertEquals(1L, result.getId()),
+                () -> assertEquals("1@test.com", result.getEmail()),
+                () -> assertEquals("1", result.getFirstName()),
+                () -> assertEquals("1", result.getLastName()),
+                () -> assertEquals("chirurg", result.getSpecialization())
+        );
     }
 
     @Test
@@ -105,24 +116,42 @@ public class DoctorServiceTest {
     @Test
     void updateDoctor_doctorExists_doctorUpdated() {
         // given
+        User user = new User(1L, "1", "1");
+        Doctor existingDoctor = new Doctor(1L, "1@test.com", "1", "1", "chirurg", user, new ArrayList<>());
+        Doctor doctor = new Doctor(1L, "2@test.com", "2", "2", "onkolog", user, new ArrayList<>());
 
+        when(doctorRepository.findByEmail("1@test.com")).thenReturn(Optional.of(existingDoctor));
+        when(doctorRepository.save(existingDoctor)).thenReturn(existingDoctor);
 
         // when
-
+        Doctor result = doctorService.updateDoctor("1@test.com", doctor);
 
         // then
-
+        Mockito.verify(doctorRepository).save(existingDoctor);
+        assertAll(
+                () -> assertEquals(doctor.getEmail(), result.getEmail()),
+                () -> assertEquals(doctor.getFirstName(), result.getFirstName()),
+                () -> assertEquals(doctor.getLastName(), result.getLastName()),
+                () -> assertEquals(doctor.getSpecialization(), result.getSpecialization())
+        );
     }
 
     @Test
-    void assignToInstitution_doctorAndInstitutionExist_doctorAssigned() {
+    void assignToInstitution_doctorAndInstitutionExist_institutionAssignedToDoctor() {
         // given
+        User user = new User(1L, "1", "1");
+        Doctor doctor = new Doctor(1L, "1@test.com", "1", "1", "chirurg", user, new ArrayList<>());
+        Institution institution = new Institution(1L, "test", "warszawa", "00-000", "kolorowa", "24", null);
 
+        when(doctorRepository.findByEmail("1@test.com")).thenReturn(Optional.of(doctor));
+        when(institutionRepository.findByName("test")).thenReturn(Optional.of(institution));
+        when(doctorRepository.save(doctor)).thenReturn(doctor);
 
         // when
-
+        Doctor result = doctorService.assignToInstitution("1@test.com", "test");
 
         // then
-
+        Mockito.verify(doctorRepository).save(doctor);
+        assertEquals(doctor.getInstitutions(), result.getInstitutions());
     }
 }

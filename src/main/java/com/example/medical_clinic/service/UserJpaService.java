@@ -36,7 +36,7 @@ public class UserJpaService {
 
     public User updateUser(String username, User updatedUser) {
         User existingUser = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User with given usernem does not exist"));
+                .orElseThrow(() -> new UserNotFoundException("User with given username does not exist"));
         UserJpaValidator.validateUserUpdate(userRepository, updatedUser, username);
         existingUser.update(updatedUser);
         return userRepository.save(existingUser);
