@@ -1,5 +1,6 @@
 package com.example.medical_clinic.service;
 
+import com.example.medical_clinic.exception.InstitutionNotFoundException;
 import com.example.medical_clinic.model.Institution;
 import com.example.medical_clinic.repository.InstitutionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,8 +13,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -74,6 +74,16 @@ public class InstitutionServiceTest {
     }
 
     @Test
+    void getInstitution_institutionDoesNotExist_throwsException() {
+        // given
+        when(institutionRepository.findByName("nonexistent")).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(InstitutionNotFoundException.class,
+                () -> institutionService.getInstitution("nonexistent"));
+    }
+
+    @Test
     void addInstitution_institutionCanBeAdded_institutionCreated() {
         // given
         Institution institution = new Institution(1L, "test1", "warszawa", "00-000", "kolorowa", "24", null);
@@ -110,6 +120,16 @@ public class InstitutionServiceTest {
     }
 
     @Test
+    void removeInstitution_institutionDoesNotExist_throwsException() {
+        // given
+        when(institutionRepository.findByName("nonexistent")).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(InstitutionNotFoundException.class,
+                () -> institutionService.removeInstitution("nonexistent"));
+    }
+
+    @Test
     void modifyInstitution_institutionExist_institutionModified() {
         // given
         Institution existingInstitution = new Institution(1L, "test1", "warszawa", "00-000", "kolorowa", "24", null);
@@ -130,5 +150,17 @@ public class InstitutionServiceTest {
                 () -> assertEquals("czarna", result.getStreet()),
                 () -> assertEquals("3", result.getBuildingNumber())
         );
+    }
+
+    @Test
+    void modifyInstitution_institutionDoesNotExist_throwsException() {
+        // given
+        when(institutionRepository.findByName("nonexistent")).thenReturn(Optional.empty());
+
+        Institution institution = new Institution(1L, "test", "city", "00-000", "street", "1", null);
+
+        // when & then
+        assertThrows(InstitutionNotFoundException.class,
+                () -> institutionService.modifyInstitution("nonexistent", institution));
     }
 }

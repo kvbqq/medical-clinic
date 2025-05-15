@@ -1,5 +1,7 @@
 package com.example.medical_clinic.service;
 
+import com.example.medical_clinic.exception.DoctorNotFoundException;
+import com.example.medical_clinic.exception.InstitutionNotFoundException;
 import com.example.medical_clinic.model.Doctor;
 import com.example.medical_clinic.model.Institution;
 import com.example.medical_clinic.model.User;
@@ -16,8 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -80,6 +81,16 @@ public class DoctorServiceTest {
     }
 
     @Test
+    void getDoctorByEmail_doctorDoesNotExist_throwsException() {
+        // given
+        when(doctorRepository.findByEmail("nonexistent@test.com")).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(DoctorNotFoundException.class,
+                () -> doctorService.getDoctorByEmail("nonexistent@test.com"));
+    }
+
+    @Test
     void createDoctor_doctorCanBeCreated_doctorCreated() {
         // given
         User user = new User(1L, "1", "1");
@@ -117,6 +128,16 @@ public class DoctorServiceTest {
     }
 
     @Test
+    void removeDoctor_doctorDoesNotExist_throwsException() {
+        // given
+        when(doctorRepository.findByEmail("nonexistent@test.com")).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(DoctorNotFoundException.class,
+                () -> doctorService.removeDoctor("nonexistent@test.com"));
+    }
+
+    @Test
     void updateDoctor_doctorExists_doctorUpdated() {
         // given
         User user = new User(1L, "1", "1");
@@ -140,6 +161,18 @@ public class DoctorServiceTest {
     }
 
     @Test
+    void updateDoctor_doctorDoesNotExist_throwsException() {
+        // given
+        when(doctorRepository.findByEmail("nonexistent@test.com")).thenReturn(Optional.empty());
+
+        Doctor doctor = new Doctor(1L, "updated@test.com", "Updated", "Doctor", "Onkolog", new User(1L, "user1", "pass1"), new ArrayList<>());
+
+        // when & then
+        assertThrows(DoctorNotFoundException.class,
+                () -> doctorService.updateDoctor("nonexistent@test.com", doctor));
+    }
+
+    @Test
     void assignToInstitution_doctorAndInstitutionExist_institutionAssignedToDoctor() {
         // given
         User user = new User(1L, "1", "1");
@@ -156,5 +189,28 @@ public class DoctorServiceTest {
         // then
         Mockito.verify(doctorRepository).save(doctor);
         assertEquals(doctor.getInstitutions(), result.getInstitutions());
+    }
+
+    @Test
+    void assignToInstitution_doctorDoesNotExist_throwsException() {
+        // given
+        when(doctorRepository.findByEmail("nonexistent@test.com")).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(DoctorNotFoundException.class,
+                () -> doctorService.assignToInstitution("nonexistent@test.com", "SomeInstitution"));
+    }
+
+    @Test
+    void assignToInstitution_institutionDoesNotExist_throwsException() {
+        // given
+        Doctor doctor = new Doctor(1L, "1@test.com", "First", "Last", "chirurg", new User(1L, "user1", "pass1"), new ArrayList<>());
+
+        when(doctorRepository.findByEmail("1@test.com")).thenReturn(Optional.of(doctor));
+        when(institutionRepository.findByName("NonexistentInstitution")).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(InstitutionNotFoundException.class,
+                () -> doctorService.assignToInstitution("1@test.com", "NonexistentInstitution"));
     }
 }

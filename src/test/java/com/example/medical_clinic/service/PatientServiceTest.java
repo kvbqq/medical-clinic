@@ -1,5 +1,6 @@
 package com.example.medical_clinic.service;
 
+import com.example.medical_clinic.exception.PatientNotFoundException;
 import com.example.medical_clinic.model.Patient;
 import com.example.medical_clinic.model.User;
 import com.example.medical_clinic.repository.PatientJpaRepository;
@@ -14,8 +15,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -64,6 +64,16 @@ public class PatientServiceTest {
     }
 
     @Test
+    void getPatient_patientDoesNotExist_throwsException() {
+        // given
+        when(patientRepository.findByEmail("nonexistent@test.com")).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(PatientNotFoundException.class,
+                () -> patientService.getPatient("nonexistent@test.com"));
+    }
+
+    @Test
     void createPatient_patientCanBeCreated_patientCreated() {
         // given
         Patient patient = new Patient(1L, "p1@test.com", "ID1", "Name1", "Last1", "123456", LocalDate.of(2000, 1, 1), new User(1L, "user1", "pass1"));
@@ -100,6 +110,16 @@ public class PatientServiceTest {
     }
 
     @Test
+    void removePatient_patientDoesNotExist_throwsException() {
+        // given
+        when(patientRepository.findByEmail("nonexistent@test.com")).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(PatientNotFoundException.class,
+                () -> patientService.removePatient("nonexistent@test.com"));
+    }
+
+    @Test
     void updatePatient_patientExists_patientUpdated() {
         // given
         User user = new User(1L, "user1", "pass1");
@@ -118,5 +138,17 @@ public class PatientServiceTest {
                 () -> assertEquals("p2@test.com", result.getEmail()),
                 () -> assertEquals("ID1", result.getIdCardNo())
         );
+    }
+
+    @Test
+    void updatePatient_patientDoesNotExist_throwsException() {
+        // given
+        when(patientRepository.findByEmail("nonexistent@test.com")).thenReturn(Optional.empty());
+
+        Patient updatedPatient = new Patient(1L, "updated@test.com", "ID1", "UpdatedName", "UpdatedLast", "987654321", LocalDate.of(1999, 9, 9), new User(1L, "user1", "pass1"));
+
+        // when & then
+        assertThrows(PatientNotFoundException.class,
+                () -> patientService.updatePatient("nonexistent@test.com", updatedPatient));
     }
 }
