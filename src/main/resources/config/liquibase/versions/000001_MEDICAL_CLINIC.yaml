@@ -129,3 +129,33 @@ databaseChangeLog:
                     foreignKey: true
                     foreignKeyName: FK_INSTITUTION_DOCTOR
                     references: INSTITUTIONS(ID)
+        - createTable:
+            tableName: VISITS
+            columns:
+              - column:
+                  name: ID
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: START_VISIT_DATE
+                  type: timestamp
+              - column:
+                  name: END_VISIT_DATE
+                  type: timestamp
+              - column:
+                  name: PATIENT_ID
+                  type: bigint
+                  constraints:
+                    foreignKey: true
+                    foreignKeyName: FK_VISIT_PATIENT
+                    references: PATIENTS(ID)
+              - column:
+                  name: DOCTOR_ID
+                  type: bigint
+                  constraints:
+                    foreignKey: true
+                    foreignKeyName: FK_VISIT_DOCTOR
+                    references: DOCTORS(ID)
