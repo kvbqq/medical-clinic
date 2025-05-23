@@ -26,6 +26,11 @@ public class DoctorService {
                 .orElseThrow(() -> new DoctorNotFoundException("Doctor with given email does not exist"));
     }
 
+    public Doctor getDoctorById(Long doctorId) {
+        return doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor with given id does not exist"));
+    }
+
     public Doctor createDoctor(Doctor doctor) {
         return doctorRepository.save(doctor);
     }
