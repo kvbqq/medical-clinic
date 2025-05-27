@@ -11,6 +11,7 @@ import com.example.medical_clinic.repository.DoctorRepository;
 import com.example.medical_clinic.repository.PatientRepository;
 import com.example.medical_clinic.repository.VisitRepository;
 import com.example.medical_clinic.validation.VisitValidator;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -40,11 +41,13 @@ public class VisitService {
         return visitRepository.findByDoctor(doctor, pageable).getContent();
     }
 
+    @Transactional
     public Visit createVisit(Visit visit) {
         VisitValidator.validateVisitCreation(visit, visitRepository);
         return visitRepository.save(visit);
     }
 
+    @Transactional
     public Visit assignPatient(Long visitId, String email) {
         Visit visit = visitRepository.findById(visitId)
                 .orElseThrow(() -> new VisitNotFoundException("Visit with given id does not exist"));

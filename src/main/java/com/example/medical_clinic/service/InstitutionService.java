@@ -3,6 +3,7 @@ package com.example.medical_clinic.service;
 import com.example.medical_clinic.exception.InstitutionNotFoundException;
 import com.example.medical_clinic.model.Institution;
 import com.example.medical_clinic.repository.InstitutionRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,16 +23,19 @@ public class InstitutionService {
                 .orElseThrow(() -> new InstitutionNotFoundException("Institution with given name does not exist"));
     }
 
+    @Transactional
     public Institution addInstitution(Institution institution) {
         return institutionRepository.save(institution);
     }
 
+    @Transactional
     public void removeInstitution(String name) {
         Institution institution = institutionRepository.findByName(name)
                 .orElseThrow(() -> new InstitutionNotFoundException("Institution with given name does not exist"));
         institutionRepository.delete(institution);
     }
 
+    @Transactional
     public Institution modifyInstitution(String name, Institution newInstitution) {
         Institution institution = institutionRepository.findByName(name)
                 .orElseThrow(() -> new InstitutionNotFoundException("Institution with given name does not exist"));

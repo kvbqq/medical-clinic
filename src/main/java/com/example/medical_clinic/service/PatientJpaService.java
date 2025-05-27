@@ -3,6 +3,7 @@ package com.example.medical_clinic.service;
 import com.example.medical_clinic.exception.PatientNotFoundException;
 import com.example.medical_clinic.repository.PatientJpaRepository;
 import com.example.medical_clinic.validation.PatientJpaValidator;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,17 +24,20 @@ public class PatientJpaService {
                 .orElseThrow(() -> new PatientNotFoundException("Patient with given email does not exist"));
     }
 
+    @Transactional
     public Patient createPatient(Patient patient) {
         PatientJpaValidator.validatePatientCreationData(patientRepository, patient, patient.getEmail());
         return patientRepository.save(patient);
     }
 
+    @Transactional
     public void removePatient(String email) {
         Patient patient = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new PatientNotFoundException("Patient with given email does not exist"));
         patientRepository.delete(patient);
     }
 
+    @Transactional
     public Patient updatePatient(String email, Patient updatedPatient) {
         Patient existingPatient = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new PatientNotFoundException("Patient with given email does not exist"));

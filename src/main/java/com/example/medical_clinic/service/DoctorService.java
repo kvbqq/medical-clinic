@@ -6,6 +6,7 @@ import com.example.medical_clinic.model.Doctor;
 import com.example.medical_clinic.model.Institution;
 import com.example.medical_clinic.repository.DoctorRepository;
 import com.example.medical_clinic.repository.InstitutionRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class DoctorService {
                 .orElseThrow(() -> new DoctorNotFoundException("Doctor with given id does not exist"));
     }
 
+    @Transactional
     public Doctor createDoctor(Doctor doctor) {
         return doctorRepository.save(doctor);
     }
@@ -41,6 +43,7 @@ public class DoctorService {
         doctorRepository.delete(doctor);
     }
 
+    @Transactional
     public Doctor updateDoctor(String email, Doctor doctor) {
         Doctor existingDoctor = doctorRepository.findByEmail(email)
                 .orElseThrow(() -> new DoctorNotFoundException("Doctor with given email does not exist"));
@@ -48,6 +51,7 @@ public class DoctorService {
         return doctorRepository.save(existingDoctor);
     }
 
+    @Transactional
     public Doctor assignToInstitution(String email, String name) {
         Doctor doctor = doctorRepository.findByEmail(email)
                 .orElseThrow(() -> new DoctorNotFoundException("Doctor with given email does not exist"));
